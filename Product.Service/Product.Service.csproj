@@ -7,11 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.1.28" />
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Product.Entity\Product.Entity.csproj" />
+    <ProjectReference Include="..\Product.Data\Product.Data.csproj" />
   </ItemGroup>
 
 </Project>
