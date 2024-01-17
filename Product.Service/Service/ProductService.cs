@@ -1,4 +1,6 @@
-﻿using Product.Data.Repository;
+﻿using AutoMapper;
+using Product.Core;
+using Product.Entity.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,36 +10,41 @@ using static Dapper.SqlMapper;
 
 namespace Product.Service.Service
 {
-    public class ProductService
+    public class ProductService : IProductService
     {
-        private readonly ProductRepository repository;
-        public ProductService(ProductRepository repository)
+        private readonly IGenericRepository<Entity.Product> _repository;
+        private readonly IMapper mapper;
+        public ProductService(IGenericRepository<Entity.Product> repository, IMapper mapper)
         {
-            this.repository = repository;
+            _repository = repository;
+            this.mapper = mapper;
         }
-        public bool Add(Entity.Product entity)
+        public bool Add(ProductDTO entity)
         {
-          return repository.Add(entity);
+            var mapped = mapper.Map<Entity.Product>(entity);
+            return _repository.Add(mapped);
         }
 
-        public bool Delete(Entity.Product entity)
+        public bool Delete(ProductDTO entity)
         {
-            return repository.Add(entity);
+            var mapped = mapper.Map<Entity.Product>(entity);
+            return _repository.Add(mapped);
         }
 
         public IEnumerable<Entity.Product> GetAll()
         {
-            return repository.GetAll();
+            return _repository.GetAll();
         }
 
-        public Product.Entity.Product GetById(int id)
+        public Entity.Product GetById(int id)
         {
-            return repository.GetById(id);
+            return _repository.GetById(id);
         }
 
-        public bool Update(Entity.Product entity)
+        public bool Update(ProductDTO entity)
         {
-            return repository.Update(entity);
+            var mapped = mapper.Map<Entity.Product>(entity);
+            return _repository.Update(mapped);
         }
     }
 }

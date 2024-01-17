@@ -15,13 +15,13 @@ namespace Product.Entity
             [Column("Id")]
             public int Id { get; set; }
 
-            [Column("product_name")]
+            [Column("Product_Name")]
             public string Name { get; set; }
 
-            [Column("product_description")]
+            [Column("Product_Description")]
             public string Description { get; set; }
 
-            [Column("product_price")]
+            [Column("Price")]
             public decimal Price { get; set; }
         }
 }

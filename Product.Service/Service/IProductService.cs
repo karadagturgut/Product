@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Product.Entity.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +12,8 @@ namespace Product.Service.Service
 
         Entity.Product GetById(int id);
         IEnumerable<Entity.Product> GetAll();
-        bool Add(Entity.Product entity);
-        bool Update(Entity.Product entity);
-        bool Delete(Entity.Product entity);
+        bool Add(ProductDTO entity);
+        bool Update(ProductDTO entity);
+        bool Delete(ProductDTO entity);
     }
 }

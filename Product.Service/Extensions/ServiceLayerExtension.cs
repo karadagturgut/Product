@@ -11,12 +11,12 @@ namespace Product.Service.Extensions
 {
     public static class ServiceLayerExtension
     {
-        //public static IServiceCollection RegisterServiceLayer(this IServiceCollection services)
-        //{
-        //    //var assembly = Assembly.GetExecutingAssembly();
-        //    //services.AddScoped<IProductService, ProductService>();
-        //    //services.AddAutoMapper(assembly);
-        //    //return services;
-        //}
+        public static IServiceCollection RegisterServiceLayer(this IServiceCollection services)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddAutoMapper(assembly);
+            return services;
+        }
     }
 }
