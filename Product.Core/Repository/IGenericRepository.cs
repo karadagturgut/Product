@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Product.Entity.Entity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,5 +14,6 @@ namespace Product.Core
         bool Add(T entity);
         bool Update(T entity);
         bool Delete(T entity);
+        IEnumerable<T> ByColumnNameAndParameters<T>(BaseRequestEntity baseEntity);
     }
 }

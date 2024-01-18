@@ -1,4 +1,5 @@
 ﻿using Product.Entity.DTO;
+using Product.Entity.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,14 @@ namespace Product.Service.Service
         bool Add(ProductDTO entity);
         bool Update(ProductDTO entity);
         bool Delete(ProductDTO entity);
+    }
+    public interface IResourceTextService
+    {
+        ResourceDTO GetById(int id);
+        IEnumerable<ResourceDTO> GetAll();
+        bool Add(ResourceDTO entity);
+        bool Update(ResourceDTO entity);
+        bool Delete(ResourceDTO entity);
+        IEnumerable<ResourceDTO> GetByKey(ResourceDTO entity);
     }
 }

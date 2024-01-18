@@ -15,6 +15,7 @@ namespace Product.Service.Extensions
         {
             var assembly = Assembly.GetExecutingAssembly();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IResourceTextService, ResourceService>();
             services.AddAutoMapper(assembly);
             return services;
         }

@@ -11,8 +11,8 @@ using Product.Data.Context;
 namespace Product.Data.Migrations
 {
     [DbContext(typeof(ProductEFContext))]
-    [Migration("20240117120025_AddProduct")]
-    partial class AddProduct
+    [Migration("20240118080145_addToProduct")]
+    partial class addToProduct
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,6 +50,30 @@ namespace Product.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("tbl_Product");
+                });
+
+            modelBuilder.Entity("Product.Entity.ResourceText", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("Id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Key");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Value");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ResourceText");
                 });
 #pragma warning restore 612, 618
         }

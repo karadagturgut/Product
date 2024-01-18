@@ -1,17 +1,12 @@
-﻿using Product.Core;
-using System.Data;
-using System;
-using System.Collections.Generic;
-
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.SqlClient;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Reflection;
+﻿using Dapper;
+using Product.Core;
+using Product.Entity.Entity;
 using System.ComponentModel.DataAnnotations;
-using System.Data.Common;
-using Dapper;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
+using System.Data.SqlClient;
+using System.Reflection;
+using System.Text;
 
 namespace Product.Data.Repository
 {
@@ -23,6 +18,8 @@ namespace Product.Data.Repository
         {
             _connection = new SqlConnection(conStr);
         }
+
+        #region Generic Metodlar
 
         public bool Add(T entity)
         {
@@ -52,6 +49,23 @@ namespace Product.Data.Repository
                 string query = $"DELETE FROM {tableName} WHERE {keyColumn} = @{keyProperty}";
 
                 rowsEffected = _connection.Execute(query, entity);
+            }
+            catch (Exception ex) { }
+
+            return rowsEffected > 0 ? true : false;
+        }
+
+        public bool DeleteById(int id)
+        {
+            int rowsEffected = 0;
+            try
+            {
+                string tableName = GetTableName();
+                string keyColumn = GetKeyColumnName();
+                string keyProperty = GetKeyPropertyName();
+                string query = $"DELETE FROM {tableName} WHERE {keyColumn} = @{id}";
+
+                rowsEffected = _connection.Execute(query);
             }
             catch (Exception ex) { }
 
@@ -121,6 +135,16 @@ namespace Product.Data.Repository
 
             return rowsEffected > 0 ? true : false;
         }
+
+        public IEnumerable<T> ByColumnNameAndParameters<T>(BaseRequestEntity baseEntity)
+        {
+            string properties = GetPropertyNames(excludeKey: true);
+            var query = $"SELECT * FROM {GetTableName()} WHERE {baseEntity.ColumnName} = @{baseEntity.ColumnName}";
+            var result = _connection.Query<T>(query,baseEntity.Parameters);
+            return result;
+        }
+
+        #endregion
 
         #region Helper
 

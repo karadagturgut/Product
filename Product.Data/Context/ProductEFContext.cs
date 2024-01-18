@@ -14,5 +14,7 @@ namespace Product.Data.Context
         {
         }
         public DbSet<Entity.Product> Products { get; set; }
+        public DbSet<Entity.ResourceText> ResourceText { get; set; }
+
     }
 }

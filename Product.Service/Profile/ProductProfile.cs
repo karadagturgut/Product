@@ -13,6 +13,9 @@ namespace Product.Service.Profile
         {
             CreateMap<ProductDTO,Entity.Product>().ReverseMap();
             CreateMap<Entity.Product, ProductDTO>();
+
+            CreateMap<ResourceDTO, Entity.ResourceText>().ReverseMap();
+            CreateMap<Entity.ResourceText, ResourceDTO>();
         }
     }
 }
