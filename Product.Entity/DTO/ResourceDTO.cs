@@ -12,6 +12,5 @@ namespace Product.Entity.DTO
         public string? Value { get; set; }
 
         public List<string>? ResourceKeyList { get; set; }
-        public List<string>? ValueList { get; set; }
     }
 }
