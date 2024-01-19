@@ -10,7 +10,7 @@ namespace Product.Entity.Entity
     {
         public string TableName { get; set; }
         public string ColumnName { get; set; }
-        public string[] Parameters { get; set; }
+        public List<string> Parameters { get; set; }
 
     }
 }

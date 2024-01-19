@@ -25,5 +25,6 @@ namespace Product.Service.Service
         bool Update(ResourceDTO entity);
         bool Delete(ResourceDTO entity);
         IEnumerable<ResourceDTO> GetByKey(ResourceDTO entity);
+        IEnumerable<ResourceDTO> GetByKeyList(ResourceDTO model);
     }
 }

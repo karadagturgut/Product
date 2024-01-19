@@ -43,6 +43,11 @@ namespace Product.API.Controllers
             return Ok(result);
         }
 
-
+        [HttpPost(Name = "GetByKeyList")]
+        public IActionResult GetByKeyList(ResourceDTO model)
+        {
+            var result = _resourceTextService.GetByKeyList(model);
+            return Ok(result);
+        }
     }
 }

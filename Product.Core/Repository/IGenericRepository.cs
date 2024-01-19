@@ -14,6 +14,7 @@ namespace Product.Core
         bool Add(T entity);
         bool Update(T entity);
         bool Delete(T entity);
-        IEnumerable<T> ByColumnNameAndParameters<T>(BaseRequestEntity baseEntity);
+        IEnumerable<dynamic> WhereIn<T>(BaseRequestEntity baseEntity);
+        IEnumerable<T> TopOne<T>(BaseRequestEntity baseEntity);
     }
 }

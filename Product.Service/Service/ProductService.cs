@@ -67,6 +67,19 @@ namespace Product.Service.Service
 
         public bool Add(ResourceDTO model)
         {
+            #region Aynı ResourceKey'e sahip değerler kontrol ediliyor.
+            BaseRequestEntity entity = new BaseRequestEntity()
+            {
+                ColumnName = "ResourceKey",
+                Parameters = new List<string> { model.ResourceKey }
+            };
+            var isExists = _repository.TopOne<ResourceText>(entity);
+            if (isExists.Count()>0)
+            {
+                return false;
+            }
+            #endregion 
+
             model.Value = CipherHelper.Encrypt(model.Value);
             var addModel = _mapper.Map<Entity.ResourceText>(model);
             return _repository.Add(addModel);
@@ -82,7 +95,7 @@ namespace Product.Service.Service
         {
             var getAllModel = _repository.GetAll();
             var returnObject = _mapper.Map<List<ResourceDTO>>(getAllModel);
-            return returnObject;
+            return CipherHelper.DecryptByList(returnObject);
         }
 
         public ResourceDTO GetById(int id)
@@ -99,16 +112,29 @@ namespace Product.Service.Service
             BaseRequestEntity entity = new BaseRequestEntity()
             {
                 ColumnName = "ResourceKey",
-                Parameters = new[] { model.Value }
+                Parameters = new List<string> { model.ResourceKey }
            };
-            var getByKey = _repository.ByColumnNameAndParameters<ResourceText>(entity);
+            IEnumerable<dynamic> getByKey = _repository.WhereIn<ResourceText>(entity);
             var mapped = _mapper.Map<List<ResourceDTO>>(getByKey);
-            return mapped;
+            return CipherHelper.DecryptByList(mapped);
+        }
+
+        public IEnumerable<ResourceDTO> GetByKeyList (ResourceDTO model)
+        {
+            BaseRequestEntity baseRequestEntity = new BaseRequestEntity()
+            {
+                ColumnName = "ResourceKey",
+                Parameters = model.ResourceKeyList
+            };
+            IEnumerable<dynamic> getByKeyList = _repository.WhereIn<List<ResourceText>>(baseRequestEntity);
+            var mapped = _mapper.Map<List<ResourceDTO>>(getByKeyList);
+            return CipherHelper.DecryptByList(mapped);
         }
 
         public bool Update(ResourceDTO model)
         {
             var updateModel = _mapper.Map<Entity.ResourceText>(model);
+            updateModel.Value = CipherHelper.Encrypt(updateModel.Value);
             return _repository.Update(updateModel);
         }
     }

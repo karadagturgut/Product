@@ -8,7 +8,10 @@ namespace Product.Entity.DTO
 {
 	public class ResourceDTO
     {
-        public string ResourceKey { get; set; }
-        public string Value { get; set; }
+        public string? ResourceKey { get; set; }
+        public string? Value { get; set; }
+
+        public List<string>? ResourceKeyList { get; set; }
+        public List<string>? ValueList { get; set; }
     }
 }

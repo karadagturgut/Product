@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Reflection;
 using System.Text;
+using System.Windows.Markup;
 
 namespace Product.Data.Repository
 {
@@ -136,11 +137,17 @@ namespace Product.Data.Repository
             return rowsEffected > 0 ? true : false;
         }
 
-        public IEnumerable<T> ByColumnNameAndParameters<T>(BaseRequestEntity baseEntity)
+        public IEnumerable<T> TopOne<T>(BaseRequestEntity baseEntity)
         {
-            string properties = GetPropertyNames(excludeKey: true);
-            var query = $"SELECT * FROM {GetTableName()} WHERE {baseEntity.ColumnName} = @{baseEntity.ColumnName}";
-            var result = _connection.Query<T>(query,baseEntity.Parameters);
+            var query = $"SELECT TOP(1) {baseEntity.ColumnName} FROM {GetTableName()} WHERE {baseEntity.ColumnName} = '{baseEntity.Parameters.First()}'";
+            var result = _connection.Query<T>(query);
+            return result;
+        }
+
+        public IEnumerable<dynamic> WhereIn<T>(BaseRequestEntity baseEntity)
+        {
+            var query = $"SELECT * FROM {GetTableName()} WHERE {baseEntity.ColumnName} IN @Values";
+            var result = _connection.Query(query,new { Values = baseEntity.Parameters });
             return result;
         }
 
