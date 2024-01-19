@@ -57,12 +57,14 @@ namespace Product.Service.Service
     {
         private readonly IGenericRepository<Entity.ResourceText> _repository;
         private readonly IMapper _mapper;
+        private readonly ILoggingService _loggingService;
         CipherHelper CipherHelper = new CipherHelper();
 
-        public ResourceService(IGenericRepository<ResourceText> repository, IMapper mapper)
+        public ResourceService(IGenericRepository<ResourceText> repository, IMapper mapper, ILoggingService loggingService)
         {
             _repository = repository;
             _mapper = mapper;
+            _loggingService = loggingService;
         }
 
         public bool Add(ResourceDTO model)
@@ -82,6 +84,7 @@ namespace Product.Service.Service
 
             model.Value = CipherHelper.Encrypt(model.Value);
             var addModel = _mapper.Map<Entity.ResourceText>(model);
+            _loggingService.LogInformation("Eklendi.");
             return _repository.Add(addModel);
         }
 

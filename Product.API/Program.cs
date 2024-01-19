@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using Product.Data.Context;
 using Product.Data.Extensions;
 using Product.Service.Extensions;
-
+using Product.Core.Extension;
+using Product.Core.GeneralHelper;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -10,9 +12,14 @@ builder.Services.AddDbContext<ProductEFContext>(opp => opp.UseSqlServer("Server=
 builder.Services.AddControllers();
 builder.Services.RegisterDataLayer(builder.Configuration);
 builder.Services.RegisterServiceLayer();
+builder.Services.AddMemoryCache();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddSingleton<ILoggingService, LoggingService>();
+LoggingConfig.ConfigureLogging();
+builder.Host.UseSerilog();
 
 var app = builder.Build();
 

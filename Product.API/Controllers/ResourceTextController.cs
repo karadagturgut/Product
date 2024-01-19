@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Product.Entity.DTO;
 using Product.Service.Service;
 
@@ -9,10 +10,12 @@ namespace Product.API.Controllers
     public class ResourceTextController : ControllerBase
     {
         private readonly IResourceTextService _resourceTextService;
+        private readonly IMemoryCache _cache;
 
-        public ResourceTextController(IResourceTextService resourceTextService)
+        public ResourceTextController(IResourceTextService resourceTextService, IMemoryCache cache)
         {
             _resourceTextService = resourceTextService;
+            _cache = cache;
         }
 
         [HttpPost(Name = "Add")]
@@ -39,14 +42,24 @@ namespace Product.API.Controllers
         [HttpPost(Name = "GetByKey")]
         public IActionResult GetByKey(ResourceDTO model)
         {
+            if(_cache.TryGetValue("GetByKey",out IEnumerable<ResourceDTO> cachedValues))
+            {
+                return Ok(cachedValues);
+            }
             var result = _resourceTextService.GetByKey(model);
+            _cache.Set("GetByKey", result, new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)});
             return Ok(result);
         }
 
         [HttpPost(Name = "GetByKeyList")]
         public IActionResult GetByKeyList(ResourceDTO model)
         {
+            if (_cache.TryGetValue("GetByKeyList",out IEnumerable<ResourceDTO> cachedValues))
+            {
+                return Ok(cachedValues);
+            }
             var result = _resourceTextService.GetByKeyList(model);
+            _cache.Set("GetByKeyList", result, new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10) });
             return Ok(result);
         }
     }
