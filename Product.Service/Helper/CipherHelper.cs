@@ -40,6 +40,7 @@ namespace Product.Service
                     foreach (var item in list)
                     {
                         item.Value = Decrypt(item.Value);
+                        item.Success = true;
                         returnlist.Add(item);   
                     }
                 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Product.Entity.DTO
 {
-	public class ResourceDTO
+	public class ResourceDTO : BaseDTO
     {
         public string? ResourceKey { get; set; }
         public string? Value { get; set; }

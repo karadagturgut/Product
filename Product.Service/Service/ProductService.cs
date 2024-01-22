@@ -67,9 +67,10 @@ namespace Product.Service.Service
             _loggingService = loggingService;
         }
 
-        public bool Add(ResourceDTO model)
+        public ResourceDTO Add(ResourceDTO model)
         {
             #region Aynı ResourceKey'e sahip değerler kontrol ediliyor.
+
             BaseRequestEntity entity = new BaseRequestEntity()
             {
                 ColumnName = "ResourceKey",
@@ -78,20 +79,32 @@ namespace Product.Service.Service
             var isExists = _repository.TopOne<ResourceText>(entity);
             if (isExists.Count()>0)
             {
-                return false;
+                return new ResourceDTO() { Success = false, Message = GetByResourceKey("ExistingKey") };
             }
-            #endregion 
+            #endregion
+
+            #region bazı alanlar setleniyor ve servisten dönüş kontrol ediliyor.
 
             model.Value = CipherHelper.Encrypt(model.Value);
             var addModel = _mapper.Map<Entity.ResourceText>(model);
-            _loggingService.LogInformation("Eklendi.");
-            return _repository.Add(addModel);
-        }
+            model.Success = _repository.Add(addModel);
 
-        public bool Delete(ResourceDTO model)
+            if (!model.Success)
+            {
+                return new ResourceDTO() { Success = false, Message = GetByResourceKey("ExistingKey"), };
+            }
+
+            #endregion
+
+            return new ResourceDTO() { Success = model.Success, Message = GetByResourceKey("") };
+        }
+        public ResourceDTO Delete(ResourceDTO model)
         {
             var removeModel = _mapper?.Map<Entity.ResourceText>(model);
-            return _repository.Delete(removeModel);
+            model.Success = _repository.Delete(removeModel);
+
+            if (!model.Success) { return new ResourceDTO() { Success = false, Message = GetByResourceKey("ExistingKey"), }; }
+            return new ResourceDTO() { Success = model.Success, Message = GetByResourceKey("ExistingKey"), };
         }
 
         public IEnumerable<ResourceDTO> GetAll()
@@ -139,6 +152,11 @@ namespace Product.Service.Service
             var updateModel = _mapper.Map<Entity.ResourceText>(model);
             updateModel.Value = CipherHelper.Encrypt(updateModel.Value);
             return _repository.Update(updateModel);
+        }
+
+        private string? GetByResourceKey(string ResourceKey)
+        {
+            return GetByKey(new ResourceDTO { ResourceKey = ResourceKey }).First().Value;
         }
     }
 }

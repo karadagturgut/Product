@@ -12,7 +12,6 @@ builder.Services.AddDbContext<ProductEFContext>(opp => opp.UseSqlServer("Server=
 builder.Services.AddControllers();
 builder.Services.RegisterDataLayer(builder.Configuration);
 builder.Services.RegisterServiceLayer();
-builder.Services.AddMemoryCache();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

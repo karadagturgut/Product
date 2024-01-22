@@ -21,9 +21,9 @@ namespace Product.Service.Service
     {
         ResourceDTO GetById(int id);
         IEnumerable<ResourceDTO> GetAll();
-        bool Add(ResourceDTO entity);
+        ResourceDTO Add(ResourceDTO model);
         bool Update(ResourceDTO entity);
-        bool Delete(ResourceDTO entity);
+        ResourceDTO Delete(ResourceDTO model);
         IEnumerable<ResourceDTO> GetByKey(ResourceDTO entity);
         IEnumerable<ResourceDTO> GetByKeyList(ResourceDTO model);
     }
