@@ -77,8 +77,9 @@ namespace Product.Service.Service
                 Parameters = new List<string> { model.ResourceKey }
             };
             var isExists = _repository.TopOne<ResourceText>(entity);
-            if (isExists.Count()>0)
+            if (isExists.Count() > 0)
             {
+                _loggingService.LogError($"{model.ResourceKey} hali hazırda bulunuyor.", new Exception());
                 return new ResourceDTO() { Success = false, Message = GetByResourceKey("ExistingKey") };
             }
             #endregion
@@ -91,19 +92,24 @@ namespace Product.Service.Service
 
             if (!model.Success)
             {
+                _loggingService.LogError("Ekleme servisi success false döndü.", new Exception());
                 return new ResourceDTO() { Success = false, Message = GetByResourceKey("ExistingKey"), };
             }
 
             #endregion
 
-            return new ResourceDTO() { Success = model.Success, Message = GetByResourceKey("") };
+            return new ResourceDTO() { Success = model.Success, Message = GetByResourceKey("Added") };
         }
         public ResourceDTO Delete(ResourceDTO model)
         {
             var removeModel = _mapper?.Map<Entity.ResourceText>(model);
             model.Success = _repository.Delete(removeModel);
 
-            if (!model.Success) { return new ResourceDTO() { Success = false, Message = GetByResourceKey("ExistingKey"), }; }
+            if (!model.Success)
+            {
+                _loggingService.LogError("Silme servisi success false döndü.", new Exception());
+                return new ResourceDTO() { Success = false, Message = GetByResourceKey("ExistingKey"), };
+            }
             return new ResourceDTO() { Success = model.Success, Message = GetByResourceKey("ExistingKey"), };
         }
 
@@ -129,13 +135,13 @@ namespace Product.Service.Service
             {
                 ColumnName = "ResourceKey",
                 Parameters = new List<string> { model.ResourceKey }
-           };
+            };
             IEnumerable<dynamic> getByKey = _repository.WhereIn<ResourceText>(entity);
             var mapped = _mapper.Map<List<ResourceDTO>>(getByKey);
             return CipherHelper.DecryptByList(mapped);
         }
 
-        public IEnumerable<ResourceDTO> GetByKeyList (ResourceDTO model)
+        public IEnumerable<ResourceDTO> GetByKeyList(ResourceDTO model)
         {
             BaseRequestEntity baseRequestEntity = new BaseRequestEntity()
             {

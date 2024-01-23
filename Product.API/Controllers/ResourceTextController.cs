@@ -10,12 +10,9 @@ namespace Product.API.Controllers
     public class ResourceTextController : ControllerBase
     {
         private readonly IResourceTextService _resourceTextService;
-        private readonly IMemoryCache _cache;
-
-        public ResourceTextController(IResourceTextService resourceTextService, IMemoryCache cache)
+        public ResourceTextController(IResourceTextService resourceTextService)
         {
             _resourceTextService = resourceTextService;
-            _cache = cache;
         }
 
         [HttpPost(Name = "Add")]
@@ -50,7 +47,6 @@ namespace Product.API.Controllers
         public IActionResult GetByKeyList(ResourceDTO model)
         {
             var result = _resourceTextService.GetByKeyList(model);
-            _cache.Set("GetByKeyList", result, new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10) });
             return Ok(result);
         }
     }

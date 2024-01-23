@@ -8,16 +8,20 @@ using System.Data.SqlClient;
 using System.Reflection;
 using System.Text;
 using System.Windows.Markup;
-
+using Serilog;
+using static Dapper.SqlMapper;
+using Product.Core.GeneralHelper;
 namespace Product.Data.Repository
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         IDbConnection _connection;
         string conStr = Environment.GetEnvironmentVariable("ConnectionString");
-        public GenericRepository()
+        ILoggingService _loggingService;
+        public GenericRepository(ILoggingService loggingService)
         {
             _connection = new SqlConnection(conStr);
+            _loggingService = loggingService;
         }
 
         #region Generic Metodlar
@@ -34,7 +38,10 @@ namespace Product.Data.Repository
 
                 rowsEffected = _connection.Execute(query, entity);
             }
-            catch (Exception ex) { }
+            catch (Exception ex) {
+
+                _loggingService.LogError(ex.Message,ex);
+            }
 
             return rowsEffected > 0 ? true : false;
         }
@@ -51,7 +58,9 @@ namespace Product.Data.Repository
 
                 rowsEffected = _connection.Execute(query, entity);
             }
-            catch (Exception ex) { }
+            catch (Exception ex) {
+                _loggingService.LogError(ex.Message, ex);
+            }
 
             return rowsEffected > 0 ? true : false;
         }
@@ -68,7 +77,7 @@ namespace Product.Data.Repository
 
                 rowsEffected = _connection.Execute(query);
             }
-            catch (Exception ex) { }
+            catch (Exception ex) { _loggingService.LogError(ex.Message, ex); }
 
             return rowsEffected > 0 ? true : false;
         }
@@ -83,7 +92,7 @@ namespace Product.Data.Repository
 
                 result = _connection.Query<T>(query);
             }
-            catch (Exception ex) { }
+            catch (Exception ex) { _loggingService.LogError(ex.Message, ex); }
 
             return result;
         }
@@ -132,7 +141,9 @@ namespace Product.Data.Repository
 
                 rowsEffected = _connection.Execute(query.ToString(), entity);
             }
-            catch (Exception ex) { }
+            catch (Exception ex) {
+                _loggingService.LogError(ex.Message, ex);
+            }
 
             return rowsEffected > 0 ? true : false;
         }
@@ -146,9 +157,18 @@ namespace Product.Data.Repository
 
         public IEnumerable<dynamic> WhereIn<T>(BaseRequestEntity baseEntity)
         {
-            var query = $"SELECT * FROM {GetTableName()} WHERE {baseEntity.ColumnName} IN @Values";
-            var result = _connection.Query(query,new { Values = baseEntity.Parameters });
-            return result;
+            try
+            {
+                var query = $"SELECT * FROM {GetTableName()} WHERE {baseEntity.ColumnName} IN @Values";
+                var result = _connection.Query(query, new { Values = baseEntity.Parameters });
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _loggingService.LogError(ex.Message, ex);
+                return Enumerable.Empty<dynamic>();
+            }
+           
         }
 
         #endregion

@@ -15,12 +15,12 @@ namespace Product.Core.Extension
         {
             Log.Logger = new LoggerConfiguration()
                             .Enrich.FromLogContext()
-                            .WriteTo.Console(new JsonFormatter())
                             .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200"))
                             {
                                 IndexFormat="Resource-Text",
                                 BatchAction = ElasticOpType.Create,
                                 AutoRegisterTemplate = true,
+                                MinimumLogEventLevel = Serilog.Events.LogEventLevel.Error,
                             })
                             .CreateLogger();
         }
