@@ -27,4 +27,10 @@ namespace Product.Service.Service
         IEnumerable<ResourceDTO> GetByKey(ResourceDTO entity);
         IEnumerable<ResourceDTO> GetByKeyList(ResourceDTO model);
     }
+
+    public interface IManualLog
+    {
+        bool Add(ManualLogRequestDTO model);
+        IEnumerable<ManualLogRequestDTO> GetByParameter(ManualLogRequestDTO model);
+    }
 }

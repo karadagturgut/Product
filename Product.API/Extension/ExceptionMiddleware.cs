@@ -1,4 +1,6 @@
 ﻿using Product.Core.GeneralHelper;
+using Product.Entity.DTO;
+using Product.Service.Service;
 using Serilog;
 using System.Net;
 using System.Text;
@@ -17,7 +19,7 @@ namespace Product.API.Extension
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext httpContext)
+        public async Task InvokeAsync(HttpContext httpContext, IManualLog manualLog)
         {
             // Middleware is enabled only when the EnableRequestResponseLogging config value is set.
             if (_isRequestResponseLoggingEnabled)
@@ -31,6 +33,7 @@ namespace Product.API.Extension
                     $"\tHost: {httpContext.Request.Host}\n" +
                     $"\tBody: {await ReadBodyFromRequest(httpContext.Request)}";
 
+                var requestBody = await ReadBodyFromRequest(httpContext.Request);
                 // Temporarily replace the HttpResponseStream, which is a write-only stream, with a MemoryStream to capture it's value in-flight.
                 var originalResponseBody = httpContext.Response.Body;
                 using var newResponseBody = new MemoryStream();
@@ -50,6 +53,7 @@ namespace Product.API.Extension
 
                 _logger.LogError($"Request: \n"+ request + "\n" + "Response: \n" + response, new Exception());
 
+                manualLog.Add( new ManualLogRequestDTO() { MethodName = httpContext.Request.Path,  Request = requestBody , Response = responseBodyText, IP = httpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()} );
                 newResponseBody.Seek(0, SeekOrigin.Begin);
                 await newResponseBody.CopyToAsync(originalResponseBody);
             }

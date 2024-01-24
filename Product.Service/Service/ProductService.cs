@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static Dapper.SqlMapper;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Product.Service.Service
 {
@@ -165,4 +166,48 @@ namespace Product.Service.Service
             return GetByKey(new ResourceDTO { ResourceKey = ResourceKey }).First().Value;
         }
     }
+
+    #region  ManualLogService: Tüm adımların başarılı/başarısız olmasından bağımsız olarak loglanması.
+    public class ManualLogService : IManualLog
+    {
+        private readonly IGenericRepository<ManualLog> _repository;
+        private readonly IMapper _mapper;
+
+        public ManualLogService(IMapper mapper, IGenericRepository<ManualLog> repository)
+        {
+            _mapper = mapper;
+            _repository = repository;
+        }
+
+        public bool Add(ManualLogRequestDTO model)
+        {
+            try
+            {
+                var mapped = _mapper.Map<ManualLog>(model);
+                var success = _repository.Add(mapped);
+                if (!success)
+                {
+                    throw new Exception("DB'ye manuel log atılırken hata oluştu.");
+                }
+                return success;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public IEnumerable<ManualLogRequestDTO> GetByParameter(ManualLogRequestDTO model)
+        {
+            var returnObject = new List<ManualLogRequestDTO>();
+            BaseRequestEntity entity = new BaseRequestEntity()
+            {
+                ColumnName = model.ColumnName,
+                Parameters = new List<string> { model.Parameter }
+            };
+            return returnObject;
+        }
+    }
+
 }
+#endregion

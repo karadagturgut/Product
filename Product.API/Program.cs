@@ -16,7 +16,7 @@ builder.Services.RegisterServiceLayer();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<ILoggingService, LoggingService>();
 LoggingConfig.ConfigureLogging();
 builder.Host.UseSerilog();
@@ -29,6 +29,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 app.UseExceptionMiddleware();
 
