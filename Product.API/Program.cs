@@ -5,6 +5,7 @@ using Product.Data.Extensions;
 using Product.Service.Extensions;
 using Product.Core.Extension;
 using Product.Core.GeneralHelper;
+using Product.API.Extension;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -28,6 +29,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseExceptionMiddleware();
 
 app.UseHttpsRedirection();
 
