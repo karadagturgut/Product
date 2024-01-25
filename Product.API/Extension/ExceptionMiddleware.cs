@@ -21,8 +21,6 @@ namespace Product.API.Extension
 
         public async Task InvokeAsync(HttpContext httpContext, IManualLog manualLog)
         {
-       
-            
             // Middleware is enabled only when the EnableRequestResponseLogging config value is set.
            try
             {

@@ -171,6 +171,22 @@ namespace Product.Data.Repository
            
         }
 
+        public IEnumerable<dynamic> Between<T>(BaseRequestEntity baseEntity)
+        {
+            try
+            {
+                var query = $"SELECT * FROM {GetTableName()} WHERE {baseEntity.ColumnName} BETWEEN {baseEntity.Parameters[0]} AND {baseEntity.Parameters[1]}";
+                var result = _connection.Query(query, new { Values = baseEntity.Parameters });
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _loggingService.LogError(ex.Message, ex);
+                return Enumerable.Empty<dynamic>();
+            }
+
+        }
+
         #endregion
 
         #region Helper

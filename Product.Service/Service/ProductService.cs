@@ -81,7 +81,7 @@ namespace Product.Service.Service
             if (isExists.Count() > 0)
             {
                 _loggingService.LogError($"{model.ResourceKey} hali hazırda bulunuyor.", new Exception());
-                return new ResourceDTO() { Success = false, Message = GetByResourceKey("ExistingKey") };
+                return new ResourceDTO() { Success = false, Message = GetByResourceKey("") };
             }
             #endregion
 
@@ -93,6 +93,7 @@ namespace Product.Service.Service
 
             if (!model.Success)
             {
+                // logging servis'e bir dto nesnesi alan, request'i de yazdıracak bir metod eklenmeli ve bu gibi yerlerde kullanılmalı.
                 _loggingService.LogError("Ekleme servisi success false döndü.", new Exception());
                 return new ResourceDTO() { Success = false, Message = GetByResourceKey("ExistingKey"), };
             }
