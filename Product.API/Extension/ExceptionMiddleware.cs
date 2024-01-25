@@ -21,8 +21,10 @@ namespace Product.API.Extension
 
         public async Task InvokeAsync(HttpContext httpContext, IManualLog manualLog)
         {
+       
+            
             // Middleware is enabled only when the EnableRequestResponseLogging config value is set.
-            if (_isRequestResponseLoggingEnabled)
+           try
             {
                var request = $"HTTP request information:\n" +
                     $"\tMethod: {httpContext.Request.Method}\n" +
@@ -41,7 +43,7 @@ namespace Product.API.Extension
 
                 // Call the next middleware in the pipeline
                 await _next(httpContext);
-
+                #region Response 
                 newResponseBody.Seek(0, SeekOrigin.Begin);
                 var responseBodyText = await new StreamReader(httpContext.Response.Body).ReadToEndAsync();
 
@@ -51,15 +53,17 @@ namespace Product.API.Extension
                     $"\tHeaders: {FormatHeaders(httpContext.Response.Headers)}\n" +
                     $"\tBody: {responseBodyText}";
 
-                _logger.LogError($"Request: \n"+ request + "\n" + "Response: \n" + response, new Exception());
-
-                manualLog.Add( new ManualLogRequestDTO() { MethodName = httpContext.Request.Path,  Request = requestBody , Response = responseBodyText, IP = httpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()} );
+                manualLog.Add( new ManualLogRequestDTO() { MethodName = httpContext.Request.Path,  Request = requestBody , Response = responseBodyText, IP = httpContext.Connection.RemoteIpAddress.MapToIPv4().ToString() , TranDate = DateTime.Now} );
                 newResponseBody.Seek(0, SeekOrigin.Begin);
                 await newResponseBody.CopyToAsync(originalResponseBody);
+                #endregion
             }
-            else
+            catch(Exception ex)
             {
-                await _next(httpContext);
+                _logger.LogError("Middleware hata: \n" +
+                    ex.Message + $"\n Request: \n {await ReadBodyFromRequest(httpContext.Request)} \n Response: {await new StreamReader(httpContext.Response.Body).ReadToEndAsync()}"
+
+                    , ex);
             }
         }
 

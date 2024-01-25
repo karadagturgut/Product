@@ -15,6 +15,7 @@ namespace Product.Entity.DTO
 
         public string IP { get; set; }
 
+        public DateTime TranDate { get; set; }
         public string ColumnName { get; set; }
         public string Parameter { get; set; }
     }

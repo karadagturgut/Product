@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Product.Data.Context;
 
@@ -11,9 +12,11 @@ using Product.Data.Context;
 namespace Product.Data.Migrations
 {
     [DbContext(typeof(ProductEFContext))]
-    partial class ProductEFContextModelSnapshot : ModelSnapshot
+    [Migration("20240125081730_addDateToLog")]
+    partial class addDateToLog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

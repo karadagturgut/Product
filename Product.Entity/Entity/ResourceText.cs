@@ -13,8 +13,5 @@ namespace Product.Entity
         public string ResourceKey { get; set; }
         [Column("Value")]
         public string Value { get; set; }
-
-        [Column("IP")]
-        public string IP { get; set; }
     }
 }

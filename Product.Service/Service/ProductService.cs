@@ -144,14 +144,23 @@ namespace Product.Service.Service
 
         public IEnumerable<ResourceDTO> GetByKeyList(ResourceDTO model)
         {
-            BaseRequestEntity baseRequestEntity = new BaseRequestEntity()
+            try
             {
-                ColumnName = "ResourceKey",
-                Parameters = model.ResourceKeyList
-            };
-            IEnumerable<dynamic> getByKeyList = _repository.WhereIn<List<ResourceText>>(baseRequestEntity);
-            var mapped = _mapper.Map<List<ResourceDTO>>(getByKeyList);
-            return CipherHelper.DecryptByList(mapped);
+                BaseRequestEntity baseRequestEntity = new BaseRequestEntity()
+                {
+                    ColumnName = "ResourceKey",
+                    Parameters = model.ResourceKeyList
+                };
+                IEnumerable<dynamic> getByKeyList = _repository.WhereIn<List<ResourceText>>(baseRequestEntity);
+                var mapped = _mapper.Map<List<ResourceDTO>>(getByKeyList);
+                return CipherHelper.DecryptByList(mapped);
+            }
+            catch (Exception ex)
+            {
+                _loggingService.LogError(ex.Message,ex);
+                throw;
+            }
+           
         }
 
         public bool Update(ResourceDTO model)
