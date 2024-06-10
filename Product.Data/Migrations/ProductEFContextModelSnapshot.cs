@@ -60,34 +60,6 @@ namespace Product.Data.Migrations
                     b.ToTable("Log");
                 });
 
-            modelBuilder.Entity("Product.Entity.Product", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("Id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Product_Description");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Product_Name");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("Price");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("tbl_Product");
-                });
-
             modelBuilder.Entity("Product.Entity.ResourceText", b =>
                 {
                     b.Property<int>("Id")

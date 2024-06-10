@@ -13,9 +13,15 @@ namespace Product.Data.Context
         public ProductEFContext(DbContextOptions<ProductEFContext> options) : base(options)
         {
         }
-        public DbSet<Entity.Product> Products { get; set; }
         public DbSet<Entity.ResourceText> ResourceText { get; set; }
         public DbSet<ManualLog> Logs { get; set; }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("DefaultConnection"));
+            }
 
+        }
     }
 }

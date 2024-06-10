@@ -16,7 +16,7 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ConnectionString": "Server=DESKTOP-4O79Q62;Database=Product;Trusted_Connection=True;User Id=sa;Password=.;TrustServerCertificate=True"
+        "DefaultConnection": "Server=DESKTOP-4O79Q62;Database=SharzTest;Trusted_Connection=True;User Id=sa;Password=.;TrustServerCertificate=True"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7033;http://localhost:5130"

@@ -14,7 +14,6 @@ namespace Product.Service.Extensions
         public static IServiceCollection RegisterServiceLayer(this IServiceCollection services)
         {
             var assembly = Assembly.GetExecutingAssembly();
-            services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IResourceTextService, ResourceService>();
             services.AddScoped<IManualLog,ManualLogService>();
             services.AddAutoMapper(assembly);

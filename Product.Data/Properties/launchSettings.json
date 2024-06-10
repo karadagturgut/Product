@@ -3,7 +3,7 @@
     "Product.Data": {
       "commandName": "Project",
       "environmentVariables": {
-        "ConnectionString": "Server=localhost\\DESKTOP-4O79Q62;Database=Product;Trusted_Connection=True;"
+        "DefaultConnection": "Server=localhost\\DESKTOP-4O79Q62;Database=Product;Trusted_Connection=True;"
       }
     }
   }
